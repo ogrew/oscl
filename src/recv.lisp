@@ -3,14 +3,12 @@
 (defun recv-main (args)
   "Entry point for recv mode. Starts listening for OSC messages."
   (let* ((port (if args (parse-integer (first args)) *default-recv-port*))
-         ;; UDPソケットをローカルポートにバインドして作成
          (socket (usocket:socket-connect 
                     nil nil ; No remote host/port for UDP server mode
                     :local-host "0.0.0.0"     ; Bind to all interfaces
                     :local-port port          ; Listen on specified port
                     :element-type '(unsigned-byte 8)
                     :protocol :datagram))     ; Configure for UDP
-         ;; 受信用バッファをループの外で作成
          (buffer (make-array 4096 :element-type '(unsigned-byte 8) :initial-element 0))
          ;; Buffer size info
          (buffer-size (length buffer)))
@@ -22,7 +20,7 @@
     (let ((non-blocking-time 0.1))  ; 100ms timeout
       (format t "[INFO] Using ~A second timeout for non-blocking operation~%" non-blocking-time)
 
-      ;; 受信ループ
+      ;; receive loop
       (loop
         ;; Brief pause between socket reads to avoid CPU spinning
         (sleep 0.2)

@@ -9,7 +9,7 @@
         (when (zerop byte) (return))
         (setf result (concatenate 'string result (string (code-char byte))))
         (incf index)))
-    ;; 4バイト境界まで進める
+    ;; Advance to 4-byte boundary
     (incf index (- 4 (mod index 4)))
     (values result index)))
 
@@ -33,13 +33,10 @@
 (defun parse-message (buffer)
   "Parse standard OSC message."
   (multiple-value-bind (address index) (parse-osc-str buffer 0)
-    (format t "[ADDRESS] ~A~%" address)
+    (format t "[ADDRESS] ~A " address)
 
-    ;; 型タグを読む
     (multiple-value-bind (typetags index) (parse-osc-str buffer index)
-      (format t "[TYPES] ~A~%" typetags)
 
-      ;; 引数を読む
       (let ((args '()))
         (loop for i from 1 below (length typetags)
               do (let ((tag (char typetags i)))
