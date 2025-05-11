@@ -32,21 +32,22 @@
                   (if (valid-osc-args-p val)
                     (setf osc-args (parse-osc-arg-list val))
                     (error "[ERROR] Invalid arguments: ~A" val)))
-               (t (format t "[WARN] Unknown option: ~a~%" opt))))
+               (t 
+                (format t "~a Unknown option: ~a~%" (log-tag "warn") opt))))
 
     (unless (and host port address)
-      (format t "[ERROR] --host, --port, --address are required.~%")
+      (format t "~a --host, --port, --address are required.~%" (log-tag "error"))
       (return-from send-main))
 
     (let ((message (build-osc-message address osc-args)))
       (let ((socket (usocket:socket-connect host port
                                             :protocol :datagram
                                             :element-type '(unsigned-byte 8))))
-        (format t "[SEND] Sending to ~a:~a~%" host port)
+        (format t "~a Sending to ~a:~a~%" (log-tag "send") host port)
         
         (if interval-ms
           (progn
-            #+sbcl (format t "[INFO] Press Ctrl+C to stop sending.~%")
+            #+sbcl (format t "~a Press Ctrl+C to stop sending.~%" (log-tag "info"))
             (loop while *send-running*
                 do
                   (handler-case
@@ -54,7 +55,7 @@
                      (usocket:socket-send socket message (length message))
                       (sleep (/ interval-ms 1000.0)))
                      (usocket:socket-error (e)
-                      (format t "[ERROR] Failed to send message: ~A~%" e)))))
+                      (format t "~a Failed to send message: ~a~%" (log-tag "error") e)))))
           (usocket:socket-send socket message (length message)))
 
-    (format t "~%[INFO] send finished.~%")))))
+    (format t "~a send finished.~%" (log-tag "info"))))))

@@ -9,4 +9,5 @@
         (declare (ignore _))
         (setf *recv-running* nil)
         (setf *send-running* nil)
-        (format t "~%[INFO] Ctrl+C detected. Exiting cleanly...~%")))))
+        (format t " -> Ctrl+C detected. Exiting cleanly...~%")
+      ))))

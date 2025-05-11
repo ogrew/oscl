@@ -10,9 +10,9 @@
               ((string= opt "--port")
                 (if (valid-port-number-p val)
                     (setf port (parse-integer val))
-                    (format t "[ERROR] Invalid port number: ~a~%" val)))
+                    (format t "~a Invalid port number: ~a~%" (log-tag "error") val)))
               (t
-                (format t "[WARN] Unknown option in recv-main: ~a~%" opt))))
+                (format t "~a Unknown option in recv-main: ~a~%" (log-tag "warn") opt))))
 
     (let* ((socket
             (handler-case
@@ -23,14 +23,15 @@
                 :element-type '(unsigned-byte 8)
                 :protocol :datagram)
               (sb-bsd-sockets:address-in-use-error ()
-                (format t "[ERROR] Port ~A is already in use. Please try a different port.~%" port)
+                (format t "~a Port ~a is already in use. Please try a different port.~%" (log-tag "error") port)
                 (return-from recv-main))))
            (buffer (make-array 4096 :element-type '(unsigned-byte 8) :initial-element 0))
            (buffer-size (length buffer)))
-      (format t "[RECEIVE] Listening on port ~A (all interfaces: 0.0.0.0)~%" port)
-      (format t "[CONFIG] Loop interval: ~A s / Socket timeout: ~A s~%"
-          *recv-loop-interval* *recv-socket-timeout*)
-      #+sbcl (format t "[INFO] Press Ctrl+C to stop receiving.~%")
+      (format t "~a Listening on port ~a (all interfaces: 0.0.0.0)~%" (log-tag "receive") port)
+      (format t "~a Loop interval: ~a s / Socket timeout: ~a s~%"
+          (log-tag "config") *recv-loop-interval* *recv-socket-timeout*)
+
+      #+sbcl (format t "~a Press Ctrl+C to stop receiving.~%" (log-tag "info"))
 
     ;; Add non-blocking logic
     (let ((non-blocking-time *recv-socket-timeout*))
@@ -78,21 +79,23 @@
                   (cond
                     ;; Valid data received
                     ((> bytes-received 0)
-                     (format t "[SUCCESS] From ~A:~A - " 
+                     (format t "~a From ~A:~A - " 
+                             (log-tag "success")
                              (or remote-host "unknown") 
                              (or remote-port "unknown"))
                      (parse-buffer buffer bytes-received))
                     
                     ;; Zero bytes received 
                     ((= bytes-received 0)
-                     (format t "[WARN] Zero bytes received~%"))
+                     (format t "~a Zero bytes received~%" (log-tag "warn")))
                     
                     ;; Shouldn't happen with our improved handling
-                    (t (format t "[ERROR] Invalid receive result~%")))))))
+                    (t 
+                     (format t "~a Invalid receive result~%" (log-tag "error"))))))))
 
           (error () 
-            (format t "[ERROR] Unexpected error in socket handling~%")
+            (format t "~a Unexpected error in socket handling~%" (log-tag "error"))
             ;; Longer pause for unexpected errors
             (sleep 2))))
 
-      (format t "~%[INFO] recv finished.~%")))))
+      (format t "~a recv finished.~%" (log-tag "info"))))))

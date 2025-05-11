@@ -57,7 +57,7 @@
                         (setf index next-index)))
 
                      (t
-                      (format t "[WARN] Unsupported type tag: ~A~%" tag)))))
+                      (format t "~a Unsupported type tag: ~a~%" (log-tag "warn") tag)))))
         (format t "[ARGS] ~A~%" args)))))
 
 (defun parse-buffer (buffer cnt)
@@ -71,35 +71,5 @@
                         (= (aref buffer 5) 108) ;; l
                         (= (aref buffer 6) 101)))) ;; e
     (if is-bundle
-        (format t "[INFO] #bundle detected (bundle support is TODO)~%")
+        (format t "~a #bundle detected (bundle support is TODO)~%" (log-tag "info"))
         (parse-message buffer))))
-
-;; DEBUG
-(defun print-buffer (buffer cnt)
-  "Print the first few bytes of a buffer.
-   BUFFER: The byte array buffer
-   COUNT: Number of bytes to display (as integer)"
-  ;; First ensure the count is a number and not a buffer
-  (when (not (numberp cnt))
-    (setf cnt 0))
-  
-  ;; Print some basic info about what we received
-  (format t "Received message of ~A bytes~%" cnt)
-  
-  ;; Only display at most 20 bytes to keep the output manageable
-  (let ((display-count (min cnt 20)))
-    (format t "First ~A bytes: " display-count)
-    (dotimes (i display-count)
-      (format t "~2,'0X " (aref buffer i)))  ;; HEX format for better readability
-    (format t "~%"))
-  
-  ;; Try to interpret as ASCII for debugging
-  (when (> cnt 0)
-    (format t "ASCII interpretation: ")
-    (let ((display-count (min cnt 40)))
-      (dotimes (i display-count)
-        (let ((byte (aref buffer i)))
-          (if (and (>= byte 32) (<= byte 126))  ;; Printable ASCII range
-              (format t "~c" (code-char byte))
-              (format t ".")))))
-    (format t "~%")))
