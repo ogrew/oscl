@@ -1,5 +1,13 @@
 (in-package :oscl)
 
+#+sbcl
+(progn
+  (require :sb-posix)
+  (sb-sys:enable-interrupt sb-unix:sigint
+  (lambda (&rest _)
+    (declare (ignore _))
+    (setf *send-running* nil))))
+
 (defun send-main (args)
   "Entry point for send mode. Sends OSC message based on CLI args."
   (let ((host nil)
@@ -28,8 +36,17 @@
                                             :protocol :datagram
                                             :element-type '(unsigned-byte 8))))
         (format t "[SEND] Sending to ~a:~a~%" host port)
+        
         (if interval-ms
-            (loop
-              (usocket:socket-send socket message (length message))
-              (sleep (/ interval-ms 1000.0)))
-            (usocket:socket-send socket message (length message)))))))
+            (loop while *send-running*
+              do
+                (handler-case
+                  (progn
+                    (usocket:socket-send socket message (length message))
+                    (sleep (/ interval-ms 1000.0)))
+                  (usocket:socket-error (e)
+                    (format t "[ERROR] Failed to send message: ~A~%" e))))
+            
+            (usocket:socket-send socket message (length message))))
+
+    (format t "~%[INFO] send terminated.~%"))))

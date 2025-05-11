@@ -11,3 +11,6 @@
 
 (defparameter *recv-running* t
   "Control flag for the recv loop. Set to NIL to exit gracefully.")
+
+(defparameter *send-running* t
+  "Control flag for the send loop. Set to NIL to exit gracefully.")
