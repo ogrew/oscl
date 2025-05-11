@@ -1,13 +1,5 @@
 (in-package :oscl)
 
-#+sbcl
-(progn
-  (require :sb-posix)
-  (sb-sys:enable-interrupt sb-unix:sigint
-  (lambda (&rest _)
-    (declare (ignore _))
-    (setf *recv-running* nil))))
-
 (defun recv-main (args)
   "Entry point for recv mode. Starts listening for OSC messages."
   (let ((port *default-recv-port*))
@@ -15,23 +7,30 @@
           for opt = (first pair)
           for val = (second pair)
           do (cond
-               ((string= opt "--port")
-                (setf port (parse-integer val)))
-               (t
+              ((string= opt "--port")
+                (if (valid-port-number-p val)
+                    (setf port (parse-integer val))
+                    (format t "[ERROR] Invalid port number: ~a~%" val)))
+              (t
                 (format t "[WARN] Unknown option in recv-main: ~a~%" opt))))
 
-    (let* ((socket (usocket:socket-connect 
-                     nil nil
-                     :local-host "0.0.0.0"
-                     :local-port port
-                     :element-type '(unsigned-byte 8)
-                     :protocol :datagram))
+    (let* ((socket
+            (handler-case
+              (usocket:socket-connect
+                nil nil
+                :local-host "0.0.0.0"
+                :local-port port
+                :element-type '(unsigned-byte 8)
+                :protocol :datagram)
+              (sb-bsd-sockets:address-in-use-error ()
+                (format t "[ERROR] Port ~A is already in use. Please try a different port.~%" port)
+                (return-from recv-main))))
            (buffer (make-array 4096 :element-type '(unsigned-byte 8) :initial-element 0))
            (buffer-size (length buffer)))
       (format t "[RECEIVE] Listening on port ~A (all interfaces: 0.0.0.0)~%" port)
       (format t "[CONFIG] Loop interval: ~A s / Socket timeout: ~A s~%"
           *recv-loop-interval* *recv-socket-timeout*)
-      (format t "[INFO] Press Ctrl+C to stop receiving.~%")
+      #+sbcl (format t "[INFO] Press Ctrl+C to stop receiving.~%")
 
     ;; Add non-blocking logic
     (let ((non-blocking-time *recv-socket-timeout*))
@@ -40,7 +39,6 @@
         do
         ;; Brief pause between socket reads to avoid CPU spinning
         (sleep *recv-loop-interval*)
-        ;(format t "[INFO] Checking for data...~%")
         ;; Non-blocking socket receive with proper error handling
         (handler-case
           (let ((ready (usocket:wait-for-input socket :timeout non-blocking-time :ready-only t)))
@@ -97,4 +95,4 @@
             ;; Longer pause for unexpected errors
             (sleep 2))))
 
-      (format t "~%[INFO] recv terminated.~%")))))
+      (format t "~%[INFO] recv finished.~%")))))

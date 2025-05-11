@@ -7,12 +7,13 @@
   :pathname "src"
   :serial t
   :components ((:file "package")
+               (:file "signal")
                (:file "const")
                (:file "util")
                (:file "main")
+               (:file "validate")
                (:file "builder")
                (:file "send")
                (:file "parser")
                (:file "recv")
-               (:file "send")
                ))

@@ -16,6 +16,19 @@
                   (setf start (1+ i)))))
     (nreverse tokens))))
 
+(defun split-by-dot (string)
+  "Split STRING into substrings at each '.' character."
+  (let ((tokens '())
+        (start 0)
+        (len (length string)))
+    (loop for i from 0 to len
+          do (when (or (= i len)
+                       (char= (char string i) #\.))
+               (when (< start i)
+                 (push (subseq string start i) tokens))
+               (setf start (1+ i))))
+    (nreverse tokens)))
+
 (defun infer-osc-arg-type (token)
   "Convert token string to integer, float, or string."
   (or (let ((int (ignore-errors (parse-integer token :junk-allowed t))))
