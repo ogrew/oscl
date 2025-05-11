@@ -64,4 +64,4 @@ oscl send --host 127.0.0.1 --port 9000 --address "/light/on"
 
 ## License
 
-MIT License
+[MIT License](https://github.com/ogrew/oscl/blob/main/LICENSE)
