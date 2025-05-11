@@ -38,7 +38,7 @@ It is designed for use in scripting, testing, and lightweight toolchains where G
 You will need [Roswell](https://github.com/roswell/roswell) and [SBCL](http://www.sbcl.org/) installed.
 
 ```
-git clone https://github.com/yourname/oscl.git
+git clone https://github.com/ogrew/oscl.git
 cd oscl
 ros build oscl.ros
 sudo mv oscl /usr/local/bin/
