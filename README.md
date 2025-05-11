@@ -37,19 +37,20 @@ It is designed for use in scripting, testing, and lightweight toolchains where G
 
 You will need [Roswell](https://github.com/roswell/roswell) and [SBCL](http://www.sbcl.org/) installed.
 
-```bash
+```
 git clone https://github.com/yourname/oscl.git
 cd oscl
-ros run
+ros build oscl.ros
+sudo mv oscl /usr/local/bin/
+sudo chmod +x /usr/local/bin/oscl
 ```
 
-Or make it executable:
+Then:
 
-```bash
-ros build oscl.ros -o oscl
 ```
-
-Then use it via `./oscl`.
+oscl recv --port 9000
+oscl send --host 127.0.0.1 --port 9000 --address "/light/on"
+```
 
 ## TODO
 
