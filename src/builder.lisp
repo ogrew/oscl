@@ -52,5 +52,7 @@
          (types (mapcar #'osc-type-tag args))
          (type-tag-str (concatenate 'string "," (coerce types 'string)))
          (type-bin (build-osc-str type-tag-str))
-         (arg-bin (mapcan #'build-osc-arg args)))
+         (arg-bin 
+          (apply #'concatenate '(vector (unsigned-byte 8))
+          (mapcar #'build-osc-arg args))))
     (concatenate '(vector (unsigned-byte 8)) address-bin type-bin arg-bin)))
