@@ -1,0 +1,23 @@
+#!/bin/sh
+#|-*- mode:lisp -*-|#
+#|
+exec ros -Q -- $0 "$@"
+|#
+
+;;; -- 必須ライブラリ読み込み --
+;(ros:ensure-asdf)
+(ql:quickload :usocket)
+
+;;; -- ロード処理 --
+(load (merge-pathnames "src/package.lisp" *load-truename*))
+(load (merge-pathnames "src/const.lisp" *load-truename*))
+(load (merge-pathnames "src/util.lisp" *load-truename*))
+(load (merge-pathnames "src/parser.lisp" *load-truename*))
+(load (merge-pathnames "src/recv.lisp" *load-truename*))
+(load (merge-pathnames "src/builder.lisp" *load-truename*))
+(load (merge-pathnames "src/send.lisp" *load-truename*))
+(load (merge-pathnames "src/main.lisp" *load-truename*))
+
+;;; -- 実行エントリーポイント --
+(defun main (&rest args)
+  (apply (find-symbol "MAIN" :oscl) args))
