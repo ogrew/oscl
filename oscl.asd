@@ -8,6 +8,7 @@
   :serial t
   :components ((:file "package")
                (:file "signal")
+               (:file "help")
                (:file "log")
                (:file "const")
                (:file "util")

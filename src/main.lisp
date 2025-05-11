@@ -9,10 +9,11 @@
   (cond
     ((null args)
      (format t "~a No command provided. Available commands: send, recv.~%" (log-tag "error")))
+    ((string= (first args) "--help")
+     (print-help))
     ((string= (first args) "send")
      (send-main (rest args)))
     ((string= (first args) "recv")
      (recv-main (rest args)))
     (t
-     (format t "~a Unknown command ~a. Available commands: send, recv.~%" (log-tag "error") (first args)))
-  ))
+     (format t "~a Unknown command ~a. Available commands: send, recv.~%" (log-tag "error") (first args)))))
