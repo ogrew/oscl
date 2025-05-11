@@ -29,3 +29,10 @@
 (defun parse-osc-arg-list (arg-string)
   "Parse OSC argument string into a list of typed values."
   (mapcar #'infer-osc-arg-type (split-by-whitespace arg-string)))
+
+(defun escape-pressed-p ()
+  "Check if the ESC key (ASCII 27) has been pressed.
+   Returns T if pressed, NIL otherwise."
+  (when (listen *standard-input*)
+    (let ((char (read-char-no-hang *standard-input* nil nil)))
+      (and char (= (char-code char) 27)))))

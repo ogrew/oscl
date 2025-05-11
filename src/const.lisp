@@ -8,3 +8,6 @@
 
 (defparameter *recv-socket-timeout* 0.1
   "Timeout in seconds for non-blocking socket input wait.")
+
+(defparameter *recv-running* t
+  "Control flag for the recv loop. Set to NIL to exit gracefully.")

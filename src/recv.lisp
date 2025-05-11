@@ -1,5 +1,13 @@
 (in-package :oscl)
 
+#+sbcl
+(progn
+  (require :sb-posix)
+  (sb-sys:enable-interrupt sb-unix:sigint
+  (lambda (&rest _)
+    (declare (ignore _))
+    (setf *recv-running* nil))))
+
 (defun recv-main (args)
   "Entry point for recv mode. Starts listening for OSC messages."
   (let ((port *default-recv-port*))
@@ -23,11 +31,13 @@
       (format t "[RECEIVE] Listening on port ~A (all interfaces: 0.0.0.0)~%" port)
       (format t "[CONFIG] Loop interval: ~A s / Socket timeout: ~A s~%"
           *recv-loop-interval* *recv-socket-timeout*)
+      (format t "[INFO] Press Ctrl+C to stop receiving.~%")
 
     ;; Add non-blocking logic
     (let ((non-blocking-time *recv-socket-timeout*))
 
-      (loop
+      (loop while *recv-running*
+        do
         ;; Brief pause between socket reads to avoid CPU spinning
         (sleep *recv-loop-interval*)
         ;(format t "[INFO] Checking for data...~%")
@@ -85,4 +95,6 @@
           (error () 
             (format t "[ERROR] Unexpected error in socket handling~%")
             ;; Longer pause for unexpected errors
-            (sleep 2))))))))
+            (sleep 2))))
+
+      (format t "~%[INFO] recv terminated.~%")))))
