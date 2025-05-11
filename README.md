@@ -6,4 +6,61 @@
 
 ## Overview
 
-minimal OSC toolkit written in Common Lisp
+Minimal OSC toolkit written in Common Lisp.  
+`oscl` provides simple CLI-based OSC message sending and receiving functionality.  
+It is designed for use in scripting, testing, and lightweight toolchains where GUI-based tools are overkill.
+
+## Usage Examples
+
+### send command
+
+```bash
+./oscl.ros send --host 127.0.0.1 --port 9000 --address "/test" --args "1 2.0 hello" --interval 1000
+```
+
+- `--host`, `--port`, and `--address` are required.
+- `--args` and `--interval` are optional.
+- `--interval` is in milliseconds. Press `Ctrl+C` to stop repeated sending.
+
+### recv command
+
+```bash
+./oscl.ros recv --port 9000
+```
+
+- `--port` is optional. Default is `9000`.
+- Press `Ctrl+C` to exit cleanly.
+
+## Install
+
+### Build from source
+
+You will need [Roswell](https://github.com/roswell/roswell) and [SBCL](http://www.sbcl.org/) installed.
+
+```bash
+git clone https://github.com/yourname/oscl.git
+cd oscl
+ros run
+```
+
+Or make it executable:
+
+```bash
+ros build oscl.ros -o oscl
+```
+
+Then use it via `./oscl`.
+
+## TODO
+
+- [ ] Support for `#bundle` OSC message type in `recv`
+- [ ] JSON output mode in `recv`
+
+## Notes
+
+- This tool uses SBCL-specific system calls such as `sb-sys:enable-interrupt`.  
+  Therefore, it may not work correctly with other Lisp implementations.
+
+## License
+
+MIT License
