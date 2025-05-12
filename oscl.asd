@@ -3,7 +3,7 @@
   :version "0.1.0"
   :author "ogrew"
   :license "MIT"
-  :depends-on (:usocket)
+  :depends-on (:usocket :yason)
   :pathname "src"
   :serial t
   :components ((:file "package")

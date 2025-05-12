@@ -14,3 +14,6 @@
 
 (defparameter *send-running* t
   "Control flag for the send loop. Set to NIL to exit gracefully.")
+
+(defparameter *default-send-json-interval* 600
+  "Default interval (in milliseconds) between OSC messages when sending from JSON.")

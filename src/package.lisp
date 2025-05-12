@@ -1,5 +1,5 @@
 (defpackage :oscl
-  (:use :cl :usocket)
+  (:use :cl :usocket :yason)
   (:documentation "Minimal ffmpeg wrapper CLI tool written in Common Lisp.")
   (:export
 

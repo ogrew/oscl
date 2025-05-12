@@ -6,7 +6,7 @@ exec ros -Q -- $0 "$@"
 
 ;;; -- 必須ライブラリ読み込み --
 ;(ros:ensure-asdf)
-(ql:quickload :usocket :silent t)
+(ql:quickload '(:usocket :yason) :silent t)
 
 ;;; -- ロード処理 --
 (load (merge-pathnames "src/package.lisp" *load-truename*))

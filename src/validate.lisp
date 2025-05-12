@@ -32,3 +32,23 @@
   (and (stringp str)
        (> (length str) 0)
        (evenp (count #\" str))))
+
+(defun valid-send-json-p (path)
+  "Check if PATH is a valid JSON file containing OSC messages."
+  (and (probe-file path)
+       (ignore-errors
+         (let ((json (with-open-file (in path)
+                        (yason:parse in))))
+           (and (listp json)
+                (every (lambda (entry)
+                         (and (hash-table-p entry)
+                              (gethash "address" entry)
+                              (gethash "args" entry)))
+                       json))))))
+
+
+(defun args-flag-p (opt)
+  (member opt '("--loop") :test #'string=))
+
+(defun args-kv-p (opt)
+  (member opt '("--host" "--port" "--address" "--args" "--interval" "--from") :test #'string=))
