@@ -30,14 +30,15 @@
     (nreverse tokens)))
 
 (defun infer-osc-arg-type (token)
-  "Convert token string to integer, float, or string."
-  (or (let ((int (ignore-errors (parse-integer token :junk-allowed t))))
-        (when int int))
-      (let ((flt (ignore-errors
-                   (let ((val (read-from-string token)))
-                     (when (floatp val) val)))))
-        (when flt flt))
-      (string-trim "\"" token)))
+  "Convert token string to integer, float, or string (quoted or raw)."
+  (handler-case
+      (let ((val (read-from-string token)))
+        (cond
+          ((integerp val) val)
+          ((floatp val) val)
+          (t (string-trim "\"" token))))
+    (error ()
+      (string-trim "\"" token))))
 
 (defun parse-osc-arg-list (arg-string)
   "Parse OSC argument string into a list of typed values."

@@ -19,3 +19,14 @@
                (:file "parser")
                (:file "recv")
                ))
+
+(defsystem "oscl/test"
+  :description "Test suite for oscl"
+  :depends-on (:oscl :rove)
+  :components ((:module "t"
+                :components
+                ((:file "test-validate")
+                 (:file "test-util")
+                 (:file "test-parser")
+                 (:file "test-builder")
+                 ))))
