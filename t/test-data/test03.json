@@ -1,0 +1,5 @@
+[
+  { "address": "/light/set", "args": ["warm", 1] },
+  { "address": "/light/set", "args": ["cool", 0] },
+  { "address": "/light/set", "args": ["neutral", 1] }
+]

@@ -1,0 +1,5 @@
+[
+  { "address": "/color/rgb", "args": [255, 128, 64] },
+  { "address": "/sound/volume", "args": [0.75] },
+  { "address": "/scene/name", "args": ["intro"] }
+]

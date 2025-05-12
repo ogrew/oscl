@@ -34,7 +34,7 @@
        (evenp (count #\" str))))
 
 (defun valid-send-json-p (path)
-  "Check if PATH is a valid JSON file containing OSC messages."
+  "Check if PATH is a valid JSON file containing OSC messages with valid types."
   (and (probe-file path)
        (ignore-errors
          (let ((json (with-open-file (in path)
@@ -42,10 +42,12 @@
            (and (listp json)
                 (every (lambda (entry)
                          (and (hash-table-p entry)
-                              (gethash "address" entry)
-                              (gethash "args" entry)))
+                              (let ((address (gethash "address" entry))
+                                    (args (gethash "args" entry)))
+                                (and address args
+                                     (valid-address-string-p address)
+                                     (listp args)))))
                        json))))))
-
 
 (defun args-flag-p (opt)
   (member opt '("--loop") :test #'string=))

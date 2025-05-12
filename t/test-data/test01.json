@@ -1,0 +1,4 @@
+[
+  { "address": "/light/on", "args": [1] },
+  { "address": "/light/off", "args": [0] }
+]

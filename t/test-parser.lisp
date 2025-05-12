@@ -1,6 +1,6 @@
-(defpackage :oscl.test.util
+(defpackage :oscl.test.parser
   (:use :cl :rove :oscl))
-(in-package :oscl.test.util)
+(in-package :oscl.test.parser)
 
 (deftest parse-osc-str-test
   (let* ((buf (make-array 16 :element-type '(unsigned-byte 8)

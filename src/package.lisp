@@ -16,6 +16,7 @@
     :valid-address-string-p
     :valid-interval-ms-p
     :valid-osc-args-p
+    :valid-send-json-p
 
     ;; main.lisp
     :main

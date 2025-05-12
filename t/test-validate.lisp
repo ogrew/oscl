@@ -30,3 +30,10 @@
   (ok (valid-osc-args-p "1 2 3"))
   (ok (valid-osc-args-p "1 \"two\" 3"))
   (ok (not (valid-osc-args-p ""))))
+
+(deftest valid-send-json-p
+  (ok (valid-send-json-p "t/test-data/valid01.json"))
+  (ok (not (valid-send-json-p "t/test-data/invalid01.json"))) ; missing address
+  (ok (not (valid-send-json-p "t/test-data/invalid02.json"))) ; args is not list
+  (ok (not (valid-send-json-p "t/test-data/invalid03.json"))) ; address is not string
+  (ok (not (valid-send-json-p "t/test-data/nonexistent.json")))) ; file doesn't exist

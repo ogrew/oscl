@@ -1,6 +1,6 @@
-(defpackage :oscl.test.util
+(defpackage :oscl.test.builder
   (:use :cl :rove :oscl))
-(in-package :oscl.test.util)
+(in-package :oscl.test.builder)
 
 (deftest build-osc-str-test
   (testing "build-osc-str with no padding needed"
