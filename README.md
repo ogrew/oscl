@@ -1,7 +1,7 @@
 # oscl
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/05bb8f4d-599d-4212-a7f4-337f7aed17db" />
+  <img src="https://github.com/user-attachments/assets/7483f06c-d49a-4041-9fab-2e84f928bca1" />
 </p>
 
 ## Overview
