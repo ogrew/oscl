@@ -7,17 +7,18 @@
   :pathname "src"
   :serial t
   :components ((:file "package")
-               (:file "signal")
+               (:file "const")
                (:file "help")
                (:file "log")
-               (:file "const")
+               (:file "signal")
                (:file "util")
-               (:file "main")
                (:file "validate")
-               (:file "builder")
-               (:file "send")
+               (:file "argparse")
                (:file "parser")
                (:file "recv")
+               (:file "builder")
+               (:file "send")
+               (:file "main")
                ))
 
 (defsystem "oscl/test"
@@ -29,4 +30,5 @@
                  (:file "test-util")
                  (:file "test-parser")
                  (:file "test-builder")
+                 (:file "test-argsparse")
                  ))))

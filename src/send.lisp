@@ -73,81 +73,28 @@
 
 (defun send-main (args)
   "Entry point for send mode. Sends OSC message based on CLI args."
-  (let ((host nil)
-        (port nil)
-        (address nil)
-        (osc-args '())
-        (interval-ms nil)
-        (file nil)
-        (loop-flag nil))
-
-    (let ((i 0))
-      (loop while (< i (length args)) do
-        (let ((opt (nth i args)))
-          (cond
-
-            ((args-flag-p opt)
-              (when (string= opt "--loop")
-                (setf loop-flag t))
-              (incf i))
-
-            ((args-kv-p opt)
-              (when (< (1+ i) (length args))
-                (let ((val (nth (+ i 1) args)))
-                  (cond
-                    ((string= opt "--host")
-                      (if (valid-ipv4-address-p val)
-                        (setf host val)
-                        (error "[ERROR] Invalid IP address: ~A" val)))
-                    ((string= opt "--port")
-                      (if (valid-port-number-p val)
-                        (setf port (parse-integer val))
-                        (error "[ERROR] Invalid Port Number: ~A" val)))
-                    ((string= opt "--address")
-                      (if (valid-address-string-p val)
-                        (setf address val)
-                        (error "[ERROR] Invalid OSC address: ~A" val)))
-                    ((string= opt "--interval")
-                      (if (valid-interval-ms-p val)
-                        (setf interval-ms (parse-integer val))
-                        (error "[ERROR] Invalid interval value: ~A" val)))
-                    ((string= opt "--args")
-                      (if (valid-osc-args-p val)
-                        (setf osc-args (parse-osc-arg-list val))
-                        (error "[ERROR] Invalid arguments: ~A" val)))
-                    ((string= opt "--from")
-                      (if (valid-send-json-p val)
-                        (setf file val)
-                        (error "[ERROR] Invalid json file: ~A" val)))))
-                (setf i (+ i 2))))
-
-            (t
-              (format t "~a Unknown option: ~a~%" (log-tag "warn") opt)
-              (incf i))
-    ))))
+  (multiple-value-bind (host port address interval-ms osc-args file loop-flag)
+      (parse-send-args args)
 
     (if file
-    ;; read from json file
+
+      ;; read from json file
       (progn
         ;; check args
         (when (or address osc-args)
-          (format t "~a --from cannot be combined with --address or --args.~%"
-            (log-tag "error"))
+          (format t "~a --from cannot be combined with --address or --args.~%" (log-tag "error"))
           (return-from send-main))
-
         (send-from-json host port file interval-ms loop-flag))
-    ;; normal mode
+
+      ;; normal mode
       (progn
         ;; check args
         (when loop-flag
-          (format t "~a --loop is only valid with --from.~%"
-            (log-tag "error"))
+          (format t "~a --loop is only valid with --from.~%" (log-tag "error"))
           (return-from send-main))
         (unless (and host port address)
-          (format t "~a --host, --port, and --address are required when not using --from.~%"
-            (log-tag "error"))
+          (format t "~a --host, --port, and --address are required when not using --from.~%" (log-tag "error"))
           (return-from send-main))
-
         (if interval-ms
           (send-loop host port address osc-args interval-ms)
           (send-once host port address osc-args))))))

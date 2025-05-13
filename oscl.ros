@@ -16,6 +16,7 @@ exec ros -Q -- $0 "$@"
 (load (merge-pathnames "src/signal.lisp" *load-truename*))
 (load (merge-pathnames "src/util.lisp" *load-truename*))
 (load (merge-pathnames "src/validate.lisp" *load-truename*))
+(load (merge-pathnames "src/argparse.lisp" *load-truename*))
 (load (merge-pathnames "src/parser.lisp" *load-truename*))
 (load (merge-pathnames "src/recv.lisp" *load-truename*))
 (load (merge-pathnames "src/builder.lisp" *load-truename*))

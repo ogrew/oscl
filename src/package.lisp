@@ -34,10 +34,10 @@
 
     ;; recv.lisp
     :recv-main
-    *recv-filter*
-    *recv-filter-mode*
-    *remote-host*
-    *remote-port*
+    :*recv-filter*
+    :*recv-filter-mode*
+    :*remote-host*
+    :*remote-port*
 
     ;; parser.lisp
     :parse-osc-str
@@ -51,4 +51,9 @@
     :*recv-loop-interval*
     :*recv-socket-timeout*
     :*recv-running*
-    :*send-running*))
+    :*send-running*
+    
+    ;; argsparse.lisp
+    :parse-send-args
+    :parse-recv-args
+    ))

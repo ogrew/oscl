@@ -8,28 +8,12 @@
 
 (defun recv-main (args)
   "Entry point for recv mode. Starts listening for OSC messages."
-  (let ((port *default-recv-port*))
-    (loop for pair on args by #'cddr
-          for opt = (first pair)
-          for val = (second pair)
-          do (cond
-              ((string= opt "--port")
-                (if (valid-port-number-p val)
-                    (setf port (parse-integer val))
-                    (format t "~a Invalid port number: ~a~%" (log-tag "error") val)))
-              ((string= opt "--filter")
-                (when val
-                  (if (and (> (length val) 0) (char= (char val 0) #\-))
-                      (progn
-                        (setf *recv-filter* (subseq val 1))
-                        (setf *recv-filter-mode* :exclude))
-                      (progn
-                        (setf *recv-filter* val)
-                        (setf *recv-filter-mode* :include)))))
-              ((string= opt "--raw")
-                (setf *recv-raw* t))
-              (t
-                (format t "~a Unknown option in recv-main: ~a~%" (log-tag "warn") opt))))
+  (multiple-value-bind (port filter filter-mode raw-flag)
+      (parse-recv-args args)
+
+    (setf *recv-filter* filter
+          *recv-filter-mode* filter-mode
+          *recv-raw* raw-flag)
 
     (let* ((socket
             (handler-case
