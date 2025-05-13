@@ -32,14 +32,13 @@ Originally created as a Lisp learning project, `oscl` has grown into a practical
 ### recv command
 
 ```bash
-> oscl recv --port 9000 --filter "point"
+> oscl recv --port 7000 --filter "point"
 ```
 
 - `--port` is optional. Default is `9000`.
 - Use `--filter <string>` to show only messages whose address includes the string.
   - Prefix with `-` to exclude matching addresses: e.g. `--filter -test`
 - Use `--raw` to display the first 64 bytes of raw data in hexadecimal.
-  - Note: `--raw` must appear at the end of the argument list.
 - Press `Ctrl+C` to exit cleanly.
 
 ## Install
@@ -48,7 +47,7 @@ Originally created as a Lisp learning project, `oscl` has grown into a practical
 
 You will need [Roswell](https://github.com/roswell/roswell) and [SBCL](http://www.sbcl.org/) installed.
 
-```
+```bash
 > git clone https://github.com/ogrew/oscl.git
 > cd oscl
 > ros build oscl.ros
@@ -58,7 +57,7 @@ You will need [Roswell](https://github.com/roswell/roswell) and [SBCL](http://ww
 
 Then:
 
-```
+```bash
 > oscl recv --port 9000
 > oscl send --host 127.0.0.1 --port 9000 --address "/light/on"
 ```
