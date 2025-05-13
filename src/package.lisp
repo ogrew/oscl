@@ -35,6 +35,7 @@
     ;; recv.lisp
     :recv-main
     *recv-filter*
+    *recv-filter-mode*
     *remote-host*
     *remote-port*
 

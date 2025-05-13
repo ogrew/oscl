@@ -1,6 +1,7 @@
 (in-package :oscl)
 
 (defvar oscl::*recv-filter*)
+(defvar oscl::*recv-filter-mode*)
 (defvar oscl::*remote-host*)
 (defvar oscl::*remote-port*)
 
@@ -39,7 +40,9 @@
   (multiple-value-bind (address index) (parse-osc-str buffer 0)
 
     (when (and *recv-filter*
-              (not (search *recv-filter* address)))
+              (ecase *recv-filter-mode*
+                (:include (not (search *recv-filter* address)))
+                (:exclude (search *recv-filter* address))))
       (return-from parse-message nil))
 
     (format t "~a From ~a:~a - " (log-tag "success")

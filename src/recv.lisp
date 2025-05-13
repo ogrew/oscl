@@ -1,6 +1,7 @@
 (in-package :oscl)
 
 (defparameter *recv-filter* nil)
+(defparameter *recv-filter-mode* :include)
 (defparameter *remote-host* nil)
 (defparameter *remote-port* nil)
 
@@ -16,9 +17,14 @@
                     (setf port (parse-integer val))
                     (format t "~a Invalid port number: ~a~%" (log-tag "error") val)))
               ((string= opt "--filter")
-                (if val
-                    (setf *recv-filter* val)
-                    (format t "~a --filter requires a string argument.~%" (log-tag "error"))))
+                (when val
+                  (if (and (> (length val) 0) (char= (char val 0) #\-))
+                      (progn
+                        (setf *recv-filter* (subseq val 1))
+                        (setf *recv-filter-mode* :exclude))
+                      (progn
+                        (setf *recv-filter* val)
+                        (setf *recv-filter-mode* :include)))))
               (t
                 (format t "~a Unknown option in recv-main: ~a~%" (log-tag "warn") opt))))
 
