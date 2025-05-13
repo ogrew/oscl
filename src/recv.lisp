@@ -4,6 +4,7 @@
 (defparameter *recv-filter-mode* :include)
 (defparameter *remote-host* nil)
 (defparameter *remote-port* nil)
+(defparameter *recv-raw* nil)
 
 (defun recv-main (args)
   "Entry point for recv mode. Starts listening for OSC messages."
@@ -25,6 +26,8 @@
                       (progn
                         (setf *recv-filter* val)
                         (setf *recv-filter-mode* :include)))))
+              ((string= opt "--raw")
+                (setf *recv-raw* t))
               (t
                 (format t "~a Unknown option in recv-main: ~a~%" (log-tag "warn") opt))))
 
@@ -101,8 +104,8 @@
                     (t 
                      (format t "~a Invalid receive result~%" (log-tag "error"))))))))
 
-          (error () 
-            (format t "~a Unexpected error in socket handling~%" (log-tag "error"))
+          (error (e) 
+            (format t "~a Unexpected error in socket handling : ~a~%" (log-tag "error") e)
             ;; Longer pause for unexpected errors
             (sleep 2))))
 

@@ -17,3 +17,6 @@
 
 (defparameter *default-send-json-interval* 600
   "Default interval (in milliseconds) between OSC messages when sending from JSON.")
+
+(defparameter *raw-display-limit* 64
+  "Maximum number of bytes to display in raw output (hexadecimal).")

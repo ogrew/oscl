@@ -4,6 +4,7 @@
 (defvar oscl::*recv-filter-mode*)
 (defvar oscl::*remote-host*)
 (defvar oscl::*remote-port*)
+(defparameter *recv-raw* nil)
 
 (defun parse-osc-str (buffer start)
   "Parse null-terminated string from buffer starting at START. Returns string and next index."
@@ -40,15 +41,24 @@
   (multiple-value-bind (address index) (parse-osc-str buffer 0)
 
     (when (and *recv-filter*
-              (ecase *recv-filter-mode*
-                (:include (not (search *recv-filter* address)))
-                (:exclude (search *recv-filter* address))))
+               (ecase *recv-filter-mode*
+                 (:include (not (search *recv-filter* address)))
+                 (:exclude (search *recv-filter* address))))
       (return-from parse-message nil))
 
     (format t "~a From ~a:~a - " (log-tag "success")
-                          (or *remote-host* "Unknown") 
-                          (or *remote-port* "Unknown"))
+            (or *remote-host* "Unknown") 
+            (or *remote-port* "Unknown"))
 
+    ;; raw node
+    (when *recv-raw*
+      (let ((limit (min *raw-display-limit* (length buffer))))
+        (format t "#RAW (first ~d bytes only): ~{~2,'0X~^ ~}~%" 
+                limit
+                (coerce (subseq buffer 0 limit) 'list))
+        (return-from parse-message nil)))
+
+    ;; normal mode
     (format t "#ADDRESS ~a " address)
 
     (multiple-value-bind (typetags index) (parse-osc-str buffer index)
@@ -59,22 +69,22 @@
                    (cond
                      ((char= tag #\i)
                       (multiple-value-bind (val next-index) (parse-osc-int buffer index)
-                        (setf args (append args (list val)))
+                        (push val args)
                         (setf index next-index)))
 
                      ((char= tag #\f)
                       (multiple-value-bind (val next-index) (parse-osc-float buffer index)
-                        (setf args (append args (list val)))
+                        (push val args)
                         (setf index next-index)))
 
                      ((char= tag #\s)
                       (multiple-value-bind (val next-index) (parse-osc-str buffer index)
-                        (setf args (append args (list val)))
+                        (push val args)
                         (setf index next-index)))
 
                      (t
                       (format t "~a Unsupported type tag: ~a~%" (log-tag "warn") tag)))))
-        (format t "#ARGS ~a~%" args)))))
+        (format t "#ARGS ~a~%" (nreverse args))))))
 
 (defun parse-buffer (buffer cnt)
   "Parse an OSC buffer. Determine if it is a bundle or message."
