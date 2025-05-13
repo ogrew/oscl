@@ -1,5 +1,9 @@
 (in-package :oscl)
 
+(defparameter *recv-filter* nil)
+(defparameter *remote-host* nil)
+(defparameter *remote-port* nil)
+
 (defun recv-main (args)
   "Entry point for recv mode. Starts listening for OSC messages."
   (let ((port *default-recv-port*))
@@ -11,6 +15,10 @@
                 (if (valid-port-number-p val)
                     (setf port (parse-integer val))
                     (format t "~a Invalid port number: ~a~%" (log-tag "error") val)))
+              ((string= opt "--filter")
+                (if val
+                    (setf *recv-filter* val)
+                    (format t "~a --filter requires a string argument.~%" (log-tag "error"))))
               (t
                 (format t "~a Unknown option in recv-main: ~a~%" (log-tag "warn") opt))))
 
@@ -49,9 +57,7 @@
                 (setf (aref buffer i) 0))
 
               ;; socket-receive modifies the buffer in-place and returns bytes-received as first value
-              (let ((bytes-received 0)
-                    (remote-host nil)
-                    (remote-port nil))
+              (let ((bytes-received 0))
 
                 ;; Use multiple-value-bind but handle carefully
                 (multiple-value-bind (bytes host port)
@@ -61,8 +67,8 @@
                     ;; If bytes-received is a number, use it directly
                     ((numberp bytes)
                      (setf bytes-received bytes
-                           remote-host host
-                           remote-port port))
+                           *remote-host* host
+                           *remote-port* port))
                     
                     ;; If buffer was returned as first value (bug workaround)
                     ((typep bytes '(array (unsigned-byte 8)))
@@ -70,8 +76,8 @@
                      (loop for i from 0 below buffer-size
                            while (> (aref bytes i) 0)
                            do (incf bytes-received))
-                     (setf remote-host host
-                           remote-port port))
+                     (setf *remote-host* host
+                           *remote-port* port))
                     
                     ;; Any other case
                     (t (setf bytes-received 0)))
@@ -79,10 +85,6 @@
                   (cond
                     ;; Valid data received
                     ((> bytes-received 0)
-                     (format t "~a From ~A:~A - " 
-                             (log-tag "success")
-                             (or remote-host "unknown") 
-                             (or remote-port "unknown"))
                      (parse-buffer buffer bytes-received))
                     
                     ;; Zero bytes received 

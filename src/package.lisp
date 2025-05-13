@@ -34,6 +34,9 @@
 
     ;; recv.lisp
     :recv-main
+    *recv-filter*
+    *remote-host*
+    *remote-port*
 
     ;; parser.lisp
     :parse-osc-str

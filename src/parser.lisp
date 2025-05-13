@@ -1,5 +1,9 @@
 (in-package :oscl)
 
+(defvar oscl::*recv-filter*)
+(defvar oscl::*remote-host*)
+(defvar oscl::*remote-port*)
+
 (defun parse-osc-str (buffer start)
   "Parse null-terminated string from buffer starting at START. Returns string and next index."
   (let ((result "")
@@ -33,7 +37,16 @@
 (defun parse-message (buffer)
   "Parse standard OSC message."
   (multiple-value-bind (address index) (parse-osc-str buffer 0)
-    (format t "[ADDRESS] ~A " address)
+
+    (when (and *recv-filter*
+              (not (search *recv-filter* address)))
+      (return-from parse-message nil))
+
+    (format t "~a From ~a:~a - " (log-tag "success")
+                          (or *remote-host* "Unknown") 
+                          (or *remote-port* "Unknown"))
+
+    (format t "#ADDRESS ~a " address)
 
     (multiple-value-bind (typetags index) (parse-osc-str buffer index)
 
@@ -58,7 +71,7 @@
 
                      (t
                       (format t "~a Unsupported type tag: ~a~%" (log-tag "warn") tag)))))
-        (format t "[ARGS] ~A~%" args)))))
+        (format t "#ARGS ~a~%" args)))))
 
 (defun parse-buffer (buffer cnt)
   "Parse an OSC buffer. Determine if it is a bundle or message."
