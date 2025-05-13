@@ -8,7 +8,7 @@
   ;; Usage セクション
   (format t "Usage:~%")
   (format t "  oscl send --host <ip> --port <num> --address <addr> [--args <args> --interval <ms>]~%")
-  (format t "  oscl recv --port <num>~%~%")
+  (format t "  oscl recv --port <num> [--filter <str>] [--raw]~%~%")
 
   ;; send モードのオプション
   (format t "Send mode options:~%")
@@ -20,7 +20,11 @@
 
   ;; recv モードのオプション
   (format t "Receive mode options:~%")
-  (format t "  --port <num>          Local port to listen on (Ctrl+C to stop)       (required)~%~%")
+  (format t "  --port <num>          Local port to listen on (Ctrl+C to stop)       (required)~%")
+  (format t "  --filter <str>        Only show messages whose address includes <str>.~%")
+  (format t "                        Use a leading '-' to exclude matches.           ~%")
+  (format t "  --raw                 Show first 64 bytes of raw data in hex.         ~%")
+  (format t "                        Must appear at the end of the argument list.     ~%~%")
 
   ;; その他
   (format t "General:~%")
