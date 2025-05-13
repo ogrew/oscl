@@ -16,7 +16,12 @@ Originally created as a Lisp learning project, `oscl` has grown into a practical
 ### send command
 
 ```bash
-./oscl.ros send --host 127.0.0.1 --port 9000 --address "/test" --args "1 2.0 hello" --interval 1000
+> oscl send \
+  --host 127.0.0.1 \
+  --port 9000 \
+  --address "/test" \
+  --args "1 2.0 hello" \
+  --interval 1000
 ```
 
 - `--host`, `--port`, and `--address` are required.
@@ -27,7 +32,7 @@ Originally created as a Lisp learning project, `oscl` has grown into a practical
 ### recv command
 
 ```bash
-./oscl.ros recv --port 9000
+> oscl recv --port 9000 --filter "point"
 ```
 
 - `--port` is optional. Default is `9000`.
@@ -44,18 +49,18 @@ Originally created as a Lisp learning project, `oscl` has grown into a practical
 You will need [Roswell](https://github.com/roswell/roswell) and [SBCL](http://www.sbcl.org/) installed.
 
 ```
-git clone https://github.com/ogrew/oscl.git
-cd oscl
-ros build oscl.ros
-sudo mv oscl /usr/local/bin/
-sudo chmod +x /usr/local/bin/oscl
+> git clone https://github.com/ogrew/oscl.git
+> cd oscl
+> ros build oscl.ros
+> sudo mv oscl /usr/local/bin/
+> sudo chmod +x /usr/local/bin/oscl
 ```
 
 Then:
 
 ```
-oscl recv --port 9000
-oscl send --host 127.0.0.1 --port 9000 --address "/light/on"
+> oscl recv --port 9000
+> oscl send --host 127.0.0.1 --port 9000 --address "/light/on"
 ```
 
 ## TODO
