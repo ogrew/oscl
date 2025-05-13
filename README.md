@@ -22,6 +22,7 @@ Originally created as a Lisp learning project, `oscl` has grown into a practical
 - `--host`, `--port`, and `--address` are required.
 - `--args` and `--interval` are optional.
 - `--interval` is in milliseconds. Press `Ctrl+C` to stop repeated sending.
+- `--host localhost` will be automatically converted to `--host 127.0.0.1`.
 
 ### recv command
 
