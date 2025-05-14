@@ -1,9 +1,9 @@
 (in-package :oscl)
 
 (defun print-help ()
-  (format t "=================================================~%")
+  (format t "~64~~%")
   (format t "~%oscl - minimal OSC send/receive tool written in Common Lisp~%~%")
-  (format t "=================================================~%~%")
+  (format t "~64~~%~%")
 
   ;; Usage セクション
   (format t "Usage:~%")
