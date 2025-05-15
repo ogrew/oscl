@@ -13,11 +13,12 @@
                (:file "signal")
                (:file "util")
                (:file "validate")
-               (:file "argparse")
+               (:file "argsparse")
                (:file "parser")
                (:file "recv")
                (:file "builder")
                (:file "send")
+               (:file "bridge")
                (:file "main")
                ))
 

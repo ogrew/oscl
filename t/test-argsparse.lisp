@@ -1,6 +1,6 @@
-(defpackage :oscl.test.argparse
+(defpackage :oscl.test.argsparse
   (:use :cl :rove :oscl))
-(in-package :oscl.test.argparse)
+(in-package :oscl.test.argsparse)
 
 (deftest parse-send-args-test
   (multiple-value-bind (host port address interval-ms args file loop-flag)
@@ -35,3 +35,15 @@
     (ok (string= filter "debug"))
     (ok (eq mode :exclude))
     (ok (null raw))))
+
+(deftest parse-bridge-args-test
+  (multiple-value-bind (in-host in-port out-host out-port filter mode)
+      (parse-bridge-args '("--in-host" "localhost" "--in-port" "9001"
+                           "--out-host" "127.0.0.1" "--out-port" "9010"
+                           "--filter" "test"))
+    (ok (string= in-host "127.0.0.1"))   ; localhost → 127.0.0.1 に変換される仕様
+    (ok (= in-port 9001))
+    (ok (string= out-host "127.0.0.1"))
+    (ok (= out-port 9010))
+    (ok (string= filter "test"))
+    (ok (eq mode :include))))

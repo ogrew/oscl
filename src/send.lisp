@@ -98,3 +98,20 @@
         (if interval-ms
           (send-loop host port address osc-args interval-ms)
           (send-once host port address osc-args))))))
+
+
+;; -------------------------------------------------------------- ;;
+;; -------------------------------------------------------------- ;;
+
+
+(defun send-raw-buffer (host port buffer)
+  "Send a raw OSC buffer (unsigned-byte 8 array) to given host:port via UDP."
+  (handler-case
+      (let ((socket (usocket:socket-connect
+                     host port
+                     :element-type '(unsigned-byte 8)
+                     :protocol :datagram)))
+        (usocket:socket-send socket buffer (length buffer))
+        (usocket:socket-close socket))
+    (usocket:socket-error (e)
+      (format t "~a Failed to send to ~a:~a: ~a~%" (log-tag "error") host port e))))

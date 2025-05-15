@@ -99,3 +99,43 @@
     (if is-bundle
         (format t "~a #bundle detected (bundle support is TODO)~%" (log-tag "info"))
         (parse-message buffer))))
+
+
+;; -------------------------------------------------------------- ;;
+;; -------------------------------------------------------------- ;;
+
+
+(defun parse-buffer-for-bridge (buffer filter filter-mode cnt)
+  "Parse buffer and return (values address args) if matched with filter. Return nil if filtered out."
+  ;; バッファを有効バイト数で切る
+  (let ((limited-buffer (subseq buffer 0 cnt)))
+    (multiple-value-bind (address index) (parse-osc-str limited-buffer 0)
+
+      ;; フィルタチェック
+      (when (and filter
+                 (ecase filter-mode
+                   (:include (not (search filter address)))
+                   (:exclude (search filter address))))
+        (return-from parse-buffer-for-bridge nil))
+
+      ;; typetags取得
+      (multiple-value-bind (typetags index) (parse-osc-str limited-buffer index)
+        (let ((args '()))
+          (loop for i from 1 below (length typetags)
+                do (let ((tag (char typetags i)))
+                     (cond
+                       ((char= tag #\i)
+                        (multiple-value-bind (val next-index) (parse-osc-int limited-buffer index)
+                          (push val args)
+                          (setf index next-index)))
+                       ((char= tag #\f)
+                        (multiple-value-bind (val next-index) (parse-osc-float limited-buffer index)
+                          (push val args)
+                          (setf index next-index)))
+                       ((char= tag #\s)
+                        (multiple-value-bind (val next-index) (parse-osc-str limited-buffer index)
+                          (push val args)
+                          (setf index next-index)))
+                       (t
+                        (format t "~a Unsupported tag: ~a~%" (log-tag "warn") tag)))))
+          (values address (nreverse args)))))))

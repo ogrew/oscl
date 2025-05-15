@@ -31,6 +31,9 @@
       (format t "~a Listening on port ~a (all interfaces: 0.0.0.0)~%" (log-tag "receive") port)
       (format t "~a Loop interval: ~a s / Socket timeout: ~a s~%"
           (log-tag "config") *recv-loop-interval* *recv-socket-timeout*)
+      (when filter
+        (format t "~a Filter mode: ~a (~a)~%" (log-tag "config")
+                (string-upcase (string filter-mode)) filter))
 
       #+sbcl (format t "~a Press Ctrl+C to stop receiving.~%" (log-tag "info"))
 
