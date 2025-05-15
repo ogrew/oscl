@@ -13,12 +13,12 @@ Originally created as a Lisp learning project, `oscl` has grown into a practical
 
 ## Usage Examples
 
-### send command
+### `send` command
 
 ```bash
 > oscl send \
   --host 127.0.0.1 \
-  --port 9000 \
+  --port 7000 \
   --address "/test" \
   --args "1 2.0 hello" \
   --interval 1000
@@ -29,7 +29,7 @@ Originally created as a Lisp learning project, `oscl` has grown into a practical
 - `--interval` is in milliseconds. Press `Ctrl+C` to stop repeated sending.
 - `--host localhost` will be automatically converted to `--host 127.0.0.1`.
 
-### recv command
+### `recv` command
 
 ```bash
 > oscl recv --port 7000 --filter "point"
@@ -40,6 +40,23 @@ Originally created as a Lisp learning project, `oscl` has grown into a practical
   - Prefix with `-` to exclude matching addresses: e.g. `--filter -test`
 - Use `--raw` to display the first 64 bytes of raw data in hexadecimal.
 - Press `Ctrl+C` to exit cleanly.
+
+### `bridge` command
+
+```bash
+> oscl bridge \
+  --in-host localhost \
+  --in-port 7001 \
+  --out-host 127.0.0.4 \
+  --out-port 7010 \
+  --filter "light"
+```
+
+- Receives OSC messages on `--in-host / --in-port` and forwards them to `--out-host / --out-port`.
+- `--filter <string>` lets you forward only messages whose address includes the string.
+- Use `--filter -<string>` to exclude matching messages.
+- `--in-host` localhost is automatically converted to `127.0.0.1`.
+- Press `Ctrl+C` to stop bridging.
 
 ## Install
 
@@ -64,13 +81,11 @@ Then:
 
 ## TODO
 
-## TODO
-
 - [ ] Support for `#bundle` OSC message type in `recv`
 - [ ] JSON output mode in `recv`
 - [ ] `record` mode: log incoming OSC messages to a file (e.g. as JSON or plain text)
 - [ ] `play` mode: replay recorded OSC messages to a target host/port with timing preserved
-- [ ] `bridge` mode: forward OSC messages from one address/port to another, with optional filtering
+- [x] `bridge` mode: forward OSC messages from one address/port to another, with optional filtering
 
 ## Notes
 

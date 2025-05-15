@@ -22,7 +22,13 @@
     :main
 
     ;; send.lisp
+    :send-loop
+    :send-once
+    :send-from-json
+    :send-json-loop
+    :send-json-once
     :send-main
+    :send-raw-buffer
 
     ;; builder.lisp
     :build-osc-str
@@ -45,6 +51,7 @@
     :parse-osc-float
     :parse-message
     :parse-buffer
+    :parse-buffer-for-bridge
 
     ;; const.lisp
     :*default-recv-port*
@@ -56,4 +63,5 @@
     ;; argsparse.lisp
     :parse-send-args
     :parse-recv-args
+    :parse-bridge-args
     ))

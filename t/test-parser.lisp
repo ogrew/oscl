@@ -33,3 +33,39 @@
     (multiple-value-setq (parsed next) (parse-osc-float buf 0))
     (ok (< (abs (- parsed 3.14)) 0.0001))
     (ok (= next 4))))
+
+(deftest parse-buffer-for-bridge-test
+  (let* ((buf #(47 116 101 115 116 0 0 0 ; "/test"
+                44 105 105 0             ; ",ii"
+                0 0 0 01                 ; int 1
+                0 0 0 02))               ; int 2
+         (cnt (length buf)))
+    ;; no filter
+    (multiple-value-bind (addr args)
+        (parse-buffer-for-bridge buf nil nil cnt)
+      (ok (string= addr "/test"))
+      (ok (equal args '(1 2))))
+
+    ;; include match
+    (multiple-value-bind (addr args)
+        (parse-buffer-for-bridge buf "test" :include cnt)
+      (ok (string= addr "/test"))
+      (ok (equal args '(1 2))))
+
+    ;; include mismatch
+    (multiple-value-bind (addr args)
+        (parse-buffer-for-bridge buf "foo" :include cnt)
+      (ok (null addr))
+      (ok (null args)))
+
+    ;; exclude match (→ should be blocked)
+    (multiple-value-bind (addr args)
+        (parse-buffer-for-bridge buf "test" :exclude cnt)
+      (ok (null addr))
+      (ok (null args)))
+
+    ;; exclude mismatch (→ should pass)
+    (multiple-value-bind (addr args)
+        (parse-buffer-for-bridge buf "foo" :exclude cnt)
+      (ok (string= addr "/test"))
+      (ok (equal args '(1 2))))))
