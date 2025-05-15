@@ -1,6 +1,6 @@
 (asdf:defsystem "oscl"
   :description "minimal OSC toolkit written in Common Lisp"
-  :version "0.1.0"
+  :version "0.2.0"
   :author "ogrew"
   :license "MIT"
   :depends-on (:usocket :yason)
