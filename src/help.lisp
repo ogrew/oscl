@@ -8,7 +8,8 @@
   ;; Usage セクション
   (format t "Usage:~%")
   (format t "  oscl send --host <ip> --port <num> --address <addr> [--args <args> --interval <ms>]~%")
-  (format t "  oscl recv --port <num> [--filter <str>] [--raw]~%~%")
+  (format t "  oscl recv --port <num> [--filter <str>] [--raw]~%")
+    (format t "  oscl bridge --in-host <ip> --in-port <num> --out-host <ip> --out-port <num> [--filter <str>]~%~%")
 
   ;; send モードのオプション
   (format t "Send mode options:~%")
@@ -25,6 +26,15 @@
   (format t "                        Use a leading '-' to exclude matches.           ~%")
   (format t "  --raw                 Show first 64 bytes of raw data in hex.         ~%")
   (format t "                        Must appear at the end of the argument list.     ~%~%")
+
+  ;; bridge モードのオプション
+  (format t "Bridge mode options:~%")
+  (format t "  --in-host <ip>        Source IP to listen for incoming OSC           (required)~%")
+  (format t "  --in-port <num>       Source port to listen on                       (required)~%")
+  (format t "  --out-host <ip>       Destination IP to forward messages to          (required)~%")
+  (format t "  --out-port <num>      Destination port for forwarding                (required)~%")
+  (format t "  --filter <str>        Forward only if address includes <str>.          ~%")
+  (format t "                        Use leading '-' to exclude matches.              ~%~%")
 
   ;; その他
   (format t "General:~%")

@@ -18,4 +18,4 @@
     ((string= (first args) "bridge")
      (bridge-main (rest args)))
     (t
-     (format t "~a Unknown command ~a. Available commands: send, recv,. bridge~%" (log-tag "error") (first args)))))
+     (format t "~a Unknown command ~a. Available commands: send, recv, bridge.~%" (log-tag "error") (first args)))))
