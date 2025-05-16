@@ -29,10 +29,26 @@ Originally created as a Lisp learning project, `oscl` has grown into a practical
 - `--interval` is in milliseconds. Press `Ctrl+C` to stop repeated sending.
 - `--host localhost` will be automatically converted to `--host 127.0.0.1`.
 
+You can also send messages from a JSON file:
+
+```bash
+> oscl send \
+  --host localhost
+  --port 9010
+  --from data.json
+  --interval 1000
+```
+
+- `--from` takes a path to a JSON file describing a list of OSC messages.
+- `--interval` controls the delay (in ms) between messages.
+- When using `--from`, `--address` and `--args` must not be used together.
+
 ### `recv` command
 
 ```bash
-> oscl recv --port 7000 --filter "point"
+> oscl recv \
+  --port 7000 \
+  --filter "point"
 ```
 
 - `--port` is optional. Default is `9000`.
@@ -60,7 +76,35 @@ Originally created as a Lisp learning project, `oscl` has grown into a practical
 
 ## Install
 
-### Build from source
+The easiest way to install `oscl` is now via Homebrew! 🍻
+
+> **Note:** oscl currently supports **Apple Silicon (arm64) Macs** only.
+
+### Install with Homebrew (Recommended)
+
+Step 1. Tap the repository:
+
+```bash
+> brew tap ogrew/oscl
+```
+
+Step 2. Install oscl:
+
+```bash
+> brew install oscl
+```
+
+Step 3. Verify installation:
+
+```bash
+> oscl --help
+```
+
+That's it! Now you can use `oscl` from anywhere.
+
+### Build from source (Alternative)
+
+If you prefer building manually or are not using Homebrew, you can build visp from source.
 
 You will need [Roswell](https://github.com/roswell/roswell) and [SBCL](http://www.sbcl.org/) installed.
 
@@ -68,15 +112,19 @@ You will need [Roswell](https://github.com/roswell/roswell) and [SBCL](http://ww
 > git clone https://github.com/ogrew/oscl.git
 > cd oscl
 > ros build oscl.ros
+```
+
+Move the generated binary into a directory included in your `$PATH` (e.g., `/usr/local/bin`):
+
+```bash
 > sudo mv oscl /usr/local/bin/
 > sudo chmod +x /usr/local/bin/oscl
 ```
 
-Then:
+Then you can use it like this:
 
 ```bash
-> oscl recv --port 9000
-> oscl send --host 127.0.0.1 --port 9000 --address "/light/on"
+> oscl --help
 ```
 
 ## TODO
