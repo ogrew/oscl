@@ -9,6 +9,15 @@
          (next nil))
     (multiple-value-setq (str next) (parse-osc-str buf 0))
     (ok (string= str "/test"))
+    (ok (= next 8)))
+
+  ;; string length exactly 4 should still advance index to 8
+  (let* ((buf (make-array 8 :element-type '(unsigned-byte 8)
+                         :initial-contents #(97 98 99 100 0 0 0 0))) ; "abcd\0\0\0"
+         (str nil)
+         (next nil))
+    (multiple-value-setq (str next) (parse-osc-str buf 0))
+    (ok (string= str "abcd"))
     (ok (= next 8))))
 
 (deftest parse-osc-int-test
