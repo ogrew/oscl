@@ -104,7 +104,7 @@ That's it! Now you can use `oscl` from anywhere.
 
 ### Build from source (Alternative)
 
-If you prefer building manually or are not using Homebrew, you can build visp from source.
+If you prefer building manually or are not using Homebrew, you can build oscl from source.
 
 You will need [Roswell](https://github.com/roswell/roswell) and [SBCL](http://www.sbcl.org/) installed.
 
