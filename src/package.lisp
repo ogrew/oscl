@@ -1,6 +1,6 @@
 (defpackage :oscl
   (:use :cl :usocket :yason)
-  (:documentation "Minimal ffmpeg wrapper CLI tool written in Common Lisp.")
+  (:documentation "Minimal Open Sound Control (OSC) CLI toolkit in Common Lisp.")
   (:export
 
     ;; util.lisp
